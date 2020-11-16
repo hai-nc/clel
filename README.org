@@ -1,0 +1,111 @@
+# -*- mode: org; -*-
+#+AUTHOR: Hai NGUYEN
+#+TITLE: [pre-alpha] elshim - using Emacs as user interface for Common Lisp applications
+
+* Introduction
+
+GNU Emacs is used as a Common Lisp IDE but it is not mentioned being used as a
+user interface for Common Lisp applications. This library is a lighweight
+attempt to make that happens.
+
+Pros:
+- Using GNU Emacs superb ecosystem and its capability to run on both the
+  terminal and on GUI.
+
+Cons:
+- requires both GNU Emacs and a Common Lisp image to run
+- not a bi-directional conversion between Common Lisp and Elisp due to different
+  lisp reader convention on each side (eg. Elisp being case-sensitive vs. CL
+  being upcase/downcase/invert).
+- Not being able to live-debugging the generated Elisp code since Emacs/SLIME
+  will only report the Elisp error in the SLIME debugger instead of the usual
+  Emacs debugger window (perhaps fixing by dumping the generated Elisp code into
+  a file and load it in Emacs!?).
+
+* Dependencies
+
+- SBCL (tested on SBCL 2.0.11.debian on Debian Sid).
+- GNU Emacs (tested on Emacs 27.1).
+- Emacs/SLIME: without Emacs/SLIME, the wrapper functions will be simply ignored
+  instead of generating any error messages when evaluated.
+- quicklisp
+
+* Installation
+
+This library is not in quicklisp.
+
+To run, put this repository in your ~/quicklisp/local-projects/, then in
+Emacs/SLIME:
+
+#+BEGIN_SRC lisp
+   (progn (ql:register-local-projects)
+          (ql:quickload 'elshim)
+#+END_SRC
+
+and in Emacs/SLIME:
+
+#+BEGIN_SRC emacs-lisp
+  (custom-set-variables
+    '(slime-enable-evaluate-in-emacs t))
+#+END_SRC
+
+* Examples
+
+** Elisp shims
+
+*** make Lisp interactive commands
+
+To create an Elisp interactive command called `elshim-hello-world':
+
+- defun:
+
+#+BEGIN_SRC lisp
+  (elshim:defun hello-world ()
+    ;; In Emacs, run M-x elshim-hello-world should print "hello world!"
+    (elshim:interactive)
+    (elshim:message "hello world!"))
+
+  (elshim::defun hello-world ()
+    ;; without (interactive), this won't be a command but will be just another
+    ;; Lisp function
+    (cl:print "hello world2!"))
+
+#+END_SRC
+
+*** eval Elisp variable,functions,macros
+
+use elshim.emacs:eval, like so:
+
+#+BEGIN_SRC lisp :results silent
+  (list
+   (elshim.emacs:eval 'buffer-file-name)
+   (elshim.emacs:eval '(current-buffer)))
+#+END_SRC
+
+
+*** wrap Elisp variables,functions,macros
+
+These wrappers facilitate calling Elisp query function from Common Lisp.
+
+Example using completing-read:
+
+#+BEGIN_SRC lisp :results silent
+  (elshim.emacs:wrap 'completing-read) ; wrap Elisp function
+  (elshim.emacs:wrap 'with-current-buffer) ; wrap Elisp macro
+
+  (list
+    (elshim:completing-read "Choose: " '("1" "2"))
+    (elshim:with-current-buffer "*Messages*" default-directory))
+#+END_SRC
+
+
+** user interaction
+
+* Other Solutions
+
+- Sam Goldstein's elisp.lisp in CLOCC :: makes a Common Lisp interpreter for
+  Elisp, while elshim is just wrappers that call Elisp from Emacs.
+
+* License
+
+GPLv3
