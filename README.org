@@ -7,7 +7,7 @@ Status: mostly works, but:
 - Choke on naked Elisp char reader macro (eg. "?\(") due to Lisp `read-lisp'
   function does not parse this Elisp expression correctly => needs modifying
   `read-lisp' function. Currently, there is a work-around: by wrapping that
-  inside the "elcl/1:#str[<...wrap into here...>]" syntax.
+  inside the "clel/1:#str[<...wrap into here...>]" syntax.
 
 * Introduction
 
