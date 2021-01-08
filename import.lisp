@@ -1,5 +1,5 @@
-(cl:setq clel::*emacs-version* "27.1")
-(clel/1:wrap '(
+(cl:setq elcl::*emacs-version* "27.1")
+(elcl/1:wrap '(
 define-mode-local-override
 charset-long-name
 thread-first
@@ -944,7 +944,7 @@ with-helm-display-marked-candidates
 gnus-atomic-progn
 --only-some-p
 ) t)
-(clel/1:wrap '(
+(elcl/1:wrap '(
 shr-image-fetched
 eww-buffer-select
 enable-theme
@@ -8283,7 +8283,7 @@ org-link--search-radio-target
 window-scroll-bar-width
 tramp-drop-volume-letter
 js2-if-node-props--cmacro
-clel-lisp-eval-string
+elcl-lisp-eval-string
 js--splice-into-items
 make-js2-xml-comment-node--cmacro
 bibtex-entry-right-delimiter
@@ -9366,7 +9366,7 @@ org-element-swap-A-B
 tab-switcher-execute
 url-fullness
 helm-grep-split-line
-clel--after-load-function
+elcl--after-load-function
 gnus-summary-limit-to-unseen
 matlab-point-at-eol
 prefer-coding-system
@@ -18635,7 +18635,7 @@ calendar-coptic-date-string
 iso8601-parse-zone
 js2-jsx-indent-line
 magit-commit-tree
-clel-print-list-full
+elcl-print-list-full
 cancel-timer
 radix-tree--remove
 org-babel-execute-maybe
@@ -23447,7 +23447,7 @@ bibtex-completion-prepare-entry
 avy-goto-word-1-above
 h-ivy-resume-hook-setup
 h-cl-setup-ccl
-clel-lisp-wrap-symbols-maybe
+elcl-lisp-wrap-symbols-maybe
 car
 paredit-gnu-emacs-p
 eww-current-url
@@ -28611,7 +28611,7 @@ org-cliplink-insert-transformed-title
 message-cite-original-1
 custom-buffer-create-other-window
 c-remove-stale-state-cache
-clel-wrappable-symbol-p
+elcl-wrappable-symbol-p
 semantic-mode-line-update
 magit-log-branches
 swiper-mc
@@ -29688,7 +29688,7 @@ h-up-list-&-sort-lines
 gnus-group-setup-buffer
 gnus-widget-reversible-match
 ) nil)
-(clel/1:wrap '(
+(elcl/1:wrap '(
 interactive
 defvar
 let*

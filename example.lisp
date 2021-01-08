@@ -1,5 +1,5 @@
-(cl:in-package :clel)
-(named-readtables:in-readtable :clel)
+(cl:in-package :elcl)
+(named-readtables:in-readtable :elcl)
 
 
 ;; * UI
@@ -123,7 +123,7 @@
 
 ;; FIXME!
 ;; (defun-cl my-goto-doc (filename)
-;;   (interactive (list (clel:read-file-name "Document: ")))
+;;   (interactive (list (elcl:read-file-name "Document: ")))
 ;;   (defvar *frame-doc-name* "doc")
 ;;   (select-frame-by-name *frame-doc-name*)
 ;;   (find-file filename))
@@ -149,7 +149,7 @@
 
 (autoload 'helm-bibtex "helm-bibtex" "" t)
 
-(eval ; use `clel:eval' to shove the Lisp variables inside:
+(eval ; use `elcl:eval' to shove the Lisp variables inside:
  `(setq bibtex-completion-bibliography "~/db.bib"
         ;; folder storing the pdf files of the bib articles:
         bibtex-completion-library-path "~/pdf/"

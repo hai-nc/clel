@@ -1,13 +1,13 @@
 # -*- mode: org; -*-
 #+AUTHOR: Hai NGUYEN
-#+TITLE: [v0.2.1] clel - a Common Lisp library for scripting GNU Emacs
+#+TITLE: [v0.2.1] elcl - a Common Lisp library for scripting GNU Emacs
 
 Status: mostly works, but:
 - Slow to load roughly 30K of Elisp symbols into the system => 
 - Choke on naked Elisp char reader macro (eg. "?\(") due to Lisp `read-lisp'
   function does not parse this Elisp expression correctly => needs modifying
   `read-lisp' function. Currently, there is a work-around: by wrapping that
-  inside the "clel/1:#str[<...wrap into here...>]" syntax.
+  inside the "elcl/1:#str[<...wrap into here...>]" syntax.
 
 * Introduction
 
@@ -30,8 +30,7 @@ This library seeks to expand its value further by letting its user:
 - SBCL (only tested on SBCL 2.0.11.debian on Debian Sid so far).
 - GNU Emacs and Slime (only tested on Emacs 27.1 debian so far).
 - quicklisp (optional, for easy installation of this library)
-- sufficient RAM to run both Lisp images (might be in the ballpark of 350MB for
-  an x86_64 machine ).
+- sufficient RAM to run both Lisp images (around 350MB on my x86_64 machine).
 
 * Installation
 
@@ -42,7 +41,7 @@ Lisp REPL:
 
 #+BEGIN_SRC lisp
    (progn (ql:register-local-projects)
-          (ql:quickload 'clel)
+          (ql:quickload 'elcl)
 #+END_SRC
 
 and in Emacs-Slime/Sly:
@@ -58,7 +57,7 @@ and in Emacs-Slime/Sly:
 :END:
 
 Note: if you find a bug, please report it with the function
-`clel-bug-report'. Thank you!
+`elcl-bug-report'. Thank you!
 
 Please run the following for a trial *on a fresh Emacs instance* (otherwise you
 will find your Emacs look and feel altered and have to restore your config via
@@ -69,7 +68,7 @@ re-loading your init-file):
 
 #+BEGIN_SRC emacs-lisp
   (slime-eval `(cl:progn
-                 (ql:quickload 'clel)
+                 (ql:quickload 'elcl)
                  ;; if not working, please change the code to load the
                  ;; "example.lisp" file of this repository:
                 (cl:load ,(concat (file-name-directory (buffer-file-name))
@@ -102,7 +101,7 @@ due to:
 * Other Solutions
 
 - Sam Goldstein's elisp.lisp in CLOCC :: makes a Common Lisp interpreter for
-  Elisp, while clel is just wrappers that call Elisp from Emacs.
+  Elisp, while elcl is just wrappers that call Elisp via Slime/Sly.
 
 * License
 

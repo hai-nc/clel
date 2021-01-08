@@ -1,6 +1,6 @@
 (in-package :cl)
 
-(asdf:defsystem :clel
+(asdf:defsystem :elcl
   :version      "0.0.1"
   :description  "description"
   :author       "Hai NGUYEN <haiuyeng@gmail.com>"

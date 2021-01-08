@@ -1,9 +1,9 @@
-(cl:in-package :clel/1)
-(named-readtables:in-readtable :clel)
+(cl:in-package :elcl/1)
+(named-readtables:in-readtable :elcl)
 
 (cl:defparameter *version* "0.1.1")
 
-(cl:defparameter *clel-package* (find-package 'clel) "A convenient thunk.")
+(cl:defparameter *elcl-package* (find-package 'elcl) "A convenient thunk.")
 
 ;; * transpile:lisp->elisp
 
@@ -141,7 +141,7 @@ commands as a list of strings. The default value for STREAM is
 ;;                         (lambda (stream char)
 ;;                           `(cl:format nil "(~{~S~^ ~})" ',(read-elisp stream #\))))
 ;;                         nil
-;;                         (named-readtables:find-readtable :clel))
+;;                         (named-readtables:find-readtable :elcl))
 
 (cl:set-dispatch-macro-character #\# #\s
    (lambda (stream char i)
@@ -152,7 +152,7 @@ commands as a list of strings. The default value for STREAM is
 	            ()
 	            "Invalid reader macro, use #str[...]")
      `(cl:format nil "~{~A~^ ~}" ',(read-elisp stream #\])))
-   (named-readtables:find-readtable :clel))
+   (named-readtables:find-readtable :elcl))
 
 ;; * eval
 (cl:defun symbol->string (sym)
@@ -176,7 +176,7 @@ eg. when evaluating:
   (swank:eval-in-emacs '(list `(,2))) ; <= choked on ,2
 
 The `*package*' is set to the COMMON-LISP package during the translation, and
-the readtable the `:clel' one (ie the `invert' readtable case is in effect).
+the readtable the `:elcl' one (ie the `invert' readtable case is in effect).
 
 Characters are converted emacs' ?<char> notation, strings are left as they
 are (except for espacing any nested \" chars, numbers are printed in base 10 and
@@ -205,7 +205,7 @@ symbols are printed as their symbol-name converted to lower case."
                  (format nil ",~A" (form->string (read-from-string (subseq form-str 1)))))
              (progn
                (warn "~A::form->string(): unhandled case for the form `~A'"
-                     'clel ; keep it out of the string for easy symbol
+                     'elcl ; keep it out of the string for easy symbol
                              ; renaming
                      form-str)
                ;; hack it away to get this done anyway:
@@ -276,7 +276,7 @@ the value of *package* at the time of executing this BODY. The Elisp function
 passes its prefix argument to the Lisp function SYM."
   ;; test example:
   ;;
-  ;; (clel/1::defun a (x) (interactive "P") (format t "current-prefix-arg: ~S~&" x))
+  ;; (elcl/1::defun a (x) (interactive "P") (format t "current-prefix-arg: ~S~&" x))
   (let* (iform docstr)
     ;; identify the docstr from the BODY argument (if any):
     (when (stringp (car body))
@@ -303,24 +303,24 @@ passes its prefix argument to the Lisp function SYM."
     ;;   Swank processing of form into string which alters the original
     ;;   textual presentation of the form.
     ;;
-    ;;   example: (clel/1:defun a (x) (interactive "P") (format t "~S~&" x))
-    ;;     this will create a function `clel-a' on the Emacs side and the
+    ;;   example: (elcl/1:defun a (x) (interactive "P") (format t "~S~&" x))
+    ;;     this will create a function `elcl-a' on the Emacs side and the
     ;;     function `a' on the Lisp side, the package of which is the value of
     ;;     cl:*package* at the time this macro (`defun') is called.
     (eval-string (format nil
                          "(defun ~(~A-~A~) (prefix)
           (interactive \"P\")
           (let* ((str (format ~S prefix)))
-          (clel-slime-eval-string str)))"
-                         'clel sym
+          (elcl-slime-eval-string str)))"
+                         'elcl sym
                          (format nil
                                  "(cl:let* ((cl:*package* ~(~A~)::~(~A~))
               (~A::~A '%S))
               (cl:destructuring-bind ~S ~S
                 (~(~A~) ~{~S~^ ~})))"
-                                 'clel/1 'current-prefix-arg
+                                 'elcl/1 'current-prefix-arg
                                  ;; cl:let* ((cl:*package* ...))
-                                 'clel/1 '*clel-package*
+                                 'elcl/1 '*elcl-package*
                                  ;; destructuring bind:
                                  arglist iform
                                  sym arglist)))
