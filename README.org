@@ -1,7 +1,13 @@
 # -*- mode: org; -*-
 #+AUTHOR: Hai NGUYEN
-#+TITLE: [proof-of-concept quality] elshim - a Common Lisp library for scripting GNU Emacs
+#+TITLE: [v0.2.1] clel - a Common Lisp library for scripting GNU Emacs
 
+Status: mostly works, but:
+- Slow to load roughly 30K of Elisp symbols into the system => 
+- Choke on naked Elisp char reader macro (eg. "?\(") due to Lisp `read-lisp'
+  function does not parse this Elisp expression correctly => needs modifying
+  `read-lisp' function. Currently, there is a work-around: by wrapping that
+  inside the "elcl/1:#str[<...wrap into here...>]" syntax.
 
 * Introduction
 
@@ -9,33 +15,23 @@ GNU Emacs has already been a Common Lisp IDE with the capability to run both in
 the terminal and the GUI and a community and an ecosystem of packages.
 
 This library seeks to expand its value further by letting its user:
-- extend Emacs in Common Lisp
-- utilize Emacs to be a text-based (blocking) user interface for Common Lisp
-  applications if approriate (eg. as quick prototype for GUI during development
-  or a UI that can run on both the Linux virtual terminal and GUI).
-- manage breaking changes in the API's of Emacs libraries thanks to the use of
-  Lisp wrappers that can be modified to adapt to the changes of the Emacs
-  library API's.
-
-The downsides of using this library, and the work-arounds or fixes for them,
-include:
-- If using this library for Emacs init config, then your init may break on bugs
-  in this library. However, there is quick fixes for this:
-  - most macros and functions symbols used for scripting in this library is
-    imported verbatim (including their function/macro parameter list) so one can
-    eval most expression in this library with Emacs Lisp interpreter.
-  - there will be a tool in the making to transpile the Lisp
-    expressions back into Elisp as a backup.
-  - this problem cannot be totally eliminated, because software has
-    bugs (even my Elisp init breaks sometimes).
+- utilize Emacs to be a text-based user interface for Common Lisp applications
+  when approriate (eg. as a UI for some sysadmin tasks since Emacs can run on
+  both the Linux virtual terminal and the graphical desktop).
+- (experimental,risky) configure Emacs in Common Lisp, with these advantages:
+  - a package system and even package-local-nickname so that Emacs user no
+    longer concern with package naming collision, now or in the future.
+  - a standardized language
+  - manage breaking changes in the API's of Emacs libraries thanks to the use of
+    Lisp wrappers which abstract away the Elisp library API's.
 
 * Dependencies
 
 - SBCL (only tested on SBCL 2.0.11.debian on Debian Sid so far).
-- GNU Emacs (only tested on Emacs 27.1 and Emacs-Sly so far).
-- quicklisp (for easy installation of this library)
-- sufficient RAM to run both Lisp images (my wild guess would be in the ballpark
-  of 400MB for an x86_64 machine).
+- GNU Emacs and Slime (only tested on Emacs 27.1 debian so far).
+- quicklisp (optional, for easy installation of this library)
+- sufficient RAM to run both Lisp images (might be in the ballpark of 350MB for
+  an x86_64 machine ).
 
 * Installation
 
@@ -46,7 +42,7 @@ Lisp REPL:
 
 #+BEGIN_SRC lisp
    (progn (ql:register-local-projects)
-          (ql:quickload 'elshim)
+          (ql:quickload 'clel)
 #+END_SRC
 
 and in Emacs-Slime/Sly:
@@ -57,8 +53,28 @@ and in Emacs-Slime/Sly:
 #+END_SRC
 
 * Examples
+:PROPERTIES:
+:CUSTOM_ID: examples
+:END:
 
-Please refer to the file _init.lisp for examples of usage.
+Note: if you find a bug, please report it with the function
+`clel-bug-report'. Thank you!
+
+Please run the following for a trial *on a fresh Emacs instance* (otherwise you
+will find your Emacs look and feel altered and have to restore your config via
+re-loading your init-file):
+
+(this example just load the  file file:example.lisp)
+
+
+#+BEGIN_SRC emacs-lisp
+  (slime-eval `(cl:progn
+                 (ql:quickload 'clel)
+                 ;; if not working, please change the code to load the
+                 ;; "example.lisp" file of this repository:
+                (cl:load ,(concat (file-name-directory (buffer-file-name))
+                               "example.lisp")))
+#+END_SRC
 
 * Development
 
@@ -78,23 +94,15 @@ due to:
 
 ** Other approaches not used
 
-- writing a compiler (in Elisp or Common Lisp) that allow the user script
-  in their Elisp syntax, then transform that code to the current version of
-  Emacs for executing. This approach has a drawback that it requires the user to
-  tweak Emacs help documentation system (eg. the `describe' family of functions,
-  eldoc, etc) to show the user's syntax which overriding the ones of the
-  built-in Elisp symbols. This makes their code dependent on Emacs's
-  implementation of these document systems and thus may be fragile.
-- Wrapping each and every Elisp function/macro symbols, including wrapping future ones
-  via `after-load-functions': this approach makes it hard to debug due to the
-  large amount of symbols being wrapped en-mass.
-- This library avoid this shimming by using wrappers - so that the generated
-  Common Lisp wrapper functions still gets their own documentation
+1. writing a compiler (in Elisp or Common Lisp) that transpile different versions
+   of Elisp into one another (eg. transpiling from Elisp 25 to Elisp 26). This
+   approach has a drawback: the user still use Elisp for their config instead of
+   using Common Lisp.
 
 * Other Solutions
 
 - Sam Goldstein's elisp.lisp in CLOCC :: makes a Common Lisp interpreter for
-  Elisp, while elshim is just wrappers that call Elisp from Emacs.
+  Elisp, while clel is just wrappers that call Elisp from Emacs.
 
 * License
 

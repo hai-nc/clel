@@ -1,11 +1,14 @@
-(in-package :cl-user)
+(in-package :cl)
 
-(asdf:defsystem :elshim
+(asdf:defsystem :clel
   :version      "0.0.1"
   :description  "description"
   :author       "Hai NGUYEN <haiuyeng@gmail.com>"
   :serial       t
-  :license      "GPL, version 3"
-  :components   ((:file "elshim-emacs")
-                 (:file "elshim"))
-  :depends-on   (#:swank #:cl-ppcre))
+  :license      "GPLv3"
+  :components   ((:file "package")
+                 (:file "core")
+                 (:file "wrapper")
+                 (:file "import")
+                 (:file "compat"))
+  :depends-on   (#:swank #:cl-ppcre #:named-readtables))
