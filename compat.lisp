@@ -1,17 +1,19 @@
-(cl:in-package :elcl)
+(cl:in-package :elcl/1)
 (named-readtables:in-readtable :elcl)
 
 ;; This file contain Lisp symbols that needs modify to achieve the same or
 ;; similar effect to their Elisp counterparts:
 
-(eval-string
- #str[
- (progn
-   (require 'cl-lib)
-   (defun elcl-def--before (&rest args)
-     (elcl-lisp-eval-string (format "(elcl/1:wrap '%s)" (car args))))
-   (cl-loop for sym in '(defmacro defun defalias)
-            do (advice-add sym :before 'elcl-def--before)))])
+(and nil
+     (eval-string
+      #str[
+      (progn
+        (require 'cl-lib)
+        (defun elcl-def--before (&rest args)
+          (elcl-lisp-eval-string (format "(elcl/1:wrap '%s)" (car args))))
+        ;; (cl-loop for sym in '(defmacro defun defalias)
+        ;;          do (advice-add sym :before 'elcl-def--before))
+        )]))
 
 ;; * hooks
 (cl:defun elcl::remove-hook (hook fun &rest _)

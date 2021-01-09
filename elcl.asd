@@ -1,14 +1,13 @@
 (in-package :cl)
 
 (asdf:defsystem :elcl
-  :version      "0.0.1"
+  :version      "0.2.1"
   :description  "description"
   :author       "Hai NGUYEN <haiuyeng@gmail.com>"
   :serial       t
   :license      "GPLv3"
   :components   ((:file "package")
                  (:file "core")
-                 (:file "wrapper")
-                 (:file "import")
+                 (:file "wrap")
                  (:file "compat"))
-  :depends-on   (#:swank #:cl-ppcre #:named-readtables))
+  :depends-on   (#:swank #:alexandria #:cl-ppcre #:named-readtables))

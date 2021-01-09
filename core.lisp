@@ -1,7 +1,7 @@
 (cl:in-package :elcl/1)
 (named-readtables:in-readtable :elcl)
 
-(cl:defparameter *version* "0.1.1")
+(cl:defparameter *version* "0.3.1")
 
 (cl:defparameter *elcl-package* (find-package 'elcl) "A convenient thunk.")
 
@@ -98,13 +98,6 @@ end of file is found immediately."
   (let ((char (peek-char nil stream nil)))
     (cond
       ((null char) nil)
-	  ((eql char #\() (read-elisp-list stream #\))
-       ;; don't print out the comment line. All other output lisp expressions
-       ;;   will be concatenated into a single line, so if this comment is
-       ;;   concatenated into other lisp expression it will comment out the rest
-       ;;   of the concatenated line:
-       nil 
-       )
       ((eql char #\;) (read-comment stream)
        ;; don't print out the comment line. All other output lisp expressions
        ;;   will be concatenated into a single line, so if this comment is

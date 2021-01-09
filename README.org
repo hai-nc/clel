@@ -1,29 +1,30 @@
 # -*- mode: org; -*-
 #+AUTHOR: Hai NGUYEN
-#+TITLE: [v0.2.1] elcl - a Common Lisp library for scripting GNU Emacs
-
-Status: mostly works, but:
-- Slow to load roughly 30K of Elisp symbols into the system => 
-- Choke on naked Elisp char reader macro (eg. "?\(") due to Lisp `read-lisp'
-  function does not parse this Elisp expression correctly => needs modifying
-  `read-lisp' function. Currently, there is a work-around: by wrapping that
-  inside the "elcl/1:#str[<...wrap into here...>]" syntax.
+#+TITLE: [v0.2.1] elcl - making GNU Emacs a text-based Common Lisp user interface
 
 * Introduction
 
-GNU Emacs has already been a Common Lisp IDE with the capability to run both in
-the terminal and the GUI and a community and an ecosystem of packages.
+This library's goal is to:
+- utilize GNU Emacs (already an IDE for Common Lisp) to be a text-based user
+  interface (whenever approriate, eg. as a quick interactive prompt, or for CL
+  applications performing some sysadmin tasks that can be able to run on either
+  the terminal or on the graphical desktop).
+- utilize some GNU Emacs libraries in a Common Lisp application.
 
-This library seeks to expand its value further by letting its user:
-- utilize Emacs to be a text-based user interface for Common Lisp applications
-  when approriate (eg. as a UI for some sysadmin tasks since Emacs can run on
-  both the Linux virtual terminal and the graphical desktop).
-- (experimental,risky) configure Emacs in Common Lisp, with these advantages:
-  - a package system and even package-local-nickname so that Emacs user no
-    longer concern with package naming collision, now or in the future.
-  - a standardized language
-  - manage breaking changes in the API's of Emacs libraries thanks to the use of
-    Lisp wrappers which abstract away the Elisp library API's.
+
+The approach is to make thin Lisp wrappers around Elisp built-in
+functions/macros, especially those for text editing and display. It can be
+extended to wrap other Emacs libraries as well.
+
+
+* Limitations
+
+- So far only tested on SBCL and Emacs-Slime on Debian Sid (due to lack of
+  resources).
+- Although the user can choose to wrap the full set of Elisp symbols for
+  scripting, it takes around 5 minutes on SBCL (x86_64) so only a handful of
+  Elisp symbols are wrapped in Lisp by default, and the user can wrap any other
+  Elisp symbols (including the full set) with the library API.
 
 * Dependencies
 
@@ -34,7 +35,8 @@ This library seeks to expand its value further by letting its user:
 
 * Installation
 
-This library is not in quicklisp.
+This library is not in quicklisp (yet).
+
 
 To run, place this repository in your ~/quicklisp/local-projects/, then in the
 Lisp REPL:
@@ -44,7 +46,7 @@ Lisp REPL:
           (ql:quickload 'elcl)
 #+END_SRC
 
-and in Emacs-Slime/Sly:
+and in Emacs-Slime:
 
 #+BEGIN_SRC emacs-lisp
   (custom-set-variables
@@ -97,6 +99,14 @@ due to:
    of Elisp into one another (eg. transpiling from Elisp 25 to Elisp 26). This
    approach has a drawback: the user still use Elisp for their config instead of
    using Common Lisp.
+
+* TODO
+currently works, but:
+- Takes 5 minutes for the system to wrap roughly 30K of Elisp symbols.
+- Choke on naked Elisp char reader macro (eg. "?\(") due to Lisp `read-lisp'
+  function does not parse this Elisp expression correctly => needs modifying
+  `read-lisp' function. Currently, there is a work-around: by wrapping that
+  inside the "elcl/1:#str[<...wrap into here...>]" syntax.
 
 * Other Solutions
 
